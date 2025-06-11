@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -91.3, "left": -14.6, "attrs": {} },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": 12,
+      "left": -132.6,
+      "attrs": { "volume": "0.1" }
+    },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 96, "left": -115.8, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -38.5,
+      "left": -217.3,
+      "rotate": 90,
+      "attrs": { "color": "green" }
+    },
+    { "type": "wokwi-slide-switch", "id": "sw1", "top": -34, "left": -342.5, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": 38.4, "left": -269.4, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": -38,
+      "left": -284,
+      "rotate": 90,
+      "attrs": { "color": "red", "xray": "" }
+    },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": -181.64, "left": -249.6, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -110.4,
+      "left": -269.35,
+      "rotate": 90,
+      "attrs": { "value": "4700" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": -110.4,
+      "left": -202.15,
+      "rotate": 90,
+      "attrs": { "value": "4700" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 44.4,
+      "left": 157.8,
+      "attrs": { "color": "blue", "flip": "1" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": -22.8,
+      "left": 157.8,
+      "attrs": { "color": "red", "flip": "1" }
+    },
+    { "type": "wokwi-gnd", "id": "gnd3", "top": 86.4, "left": 210.6, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": -163, "left": 115.2, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc2", "top": -200.84, "left": 86.4, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd4", "top": -115.2, "left": 95.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc3", "top": -181.64, "left": -316.8, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd7", "top": 38.4, "left": -327, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r4",
+      "top": -102.2,
+      "left": -336.85,
+      "rotate": 270,
+      "attrs": { "value": "4700" }
+    },
+    { "type": "wokwi-gnd", "id": "gnd8", "top": 38.4, "left": -202.2, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc5", "top": -181.64, "left": -182.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc4", "top": -104.84, "left": 336, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd5", "top": 38.4, "left": 258.6, "attrs": {} },
+    {
+      "type": "board-ssd1306",
+      "id": "oled1",
+      "top": -6.46,
+      "left": 297.83,
+      "attrs": { "i2cAddress": "0x3c" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "bz1:1", "gnd1:GND", "black", [ "v0" ] ],
+    [ "led2:C", "gnd3:GND", "black", [ "v1.01", "h-18.93" ] ],
+    [ "led1:C", "gnd3:GND", "black", [ "v0" ] ],
+    [ "esp:D4", "led2:A", "red", [ "v0.1", "h86.1" ] ],
+    [ "relay1:VCC", "vcc2:VCC", "red", [ "h0" ] ],
+    [ "relay1:IN", "esp:D25", "blue", [ "h-144", "v124.6" ] ],
+    [ "gnd4:GND", "relay1:GND", "black", [ "v0" ] ],
+    [ "vcc3:VCC", "r4:2", "red", [ "v0" ] ],
+    [ "btn2:1.l", "r1:2", "white", [ "v0" ] ],
+    [ "btn1:1.l", "r2:2", "gold", [ "v0" ] ],
+    [ "gnd2:GND", "btn2:2.r", "black", [ "v0" ] ],
+    [ "gnd8:GND", "btn1:2.r", "black", [ "v0" ] ],
+    [ "r1:1", "vcc1:VCC", "red", [ "h0" ] ],
+    [ "r2:1", "vcc5:VCC", "red", [ "h0" ] ],
+    [ "sw1:3", "gnd7:GND", "black", [ "v0" ] ],
+    [ "r4:1", "sw1:1", "red", [ "v9.6", "h-57.6", "v57.6", "h28.8" ] ],
+    [
+      "esp:VP",
+      "sw1:2",
+      "magenta",
+      [ "h-38.4", "v-19.5", "h-105.6", "v105.6", "h-172.8", "v-28.8" ]
+    ],
+    [ "btn2:1.l", "esp:D34", "white", [ "v-19.2", "h182.4", "v29" ] ],
+    [ "btn1:1.l", "esp:D35", "gold", [ "v-9.1", "h106.1", "v29.2" ] ],
+    [ "esp:D13", "bz1:2", "green", [ "h-38.4", "v57.4", "h-47.6" ] ],
+    [ "esp:D12", "led1:A", "blue", [ "h-19.2", "v85.7", "h19.2" ] ],
+    [ "oled1:GND", "gnd5:GND", "black", [ "v-19.2", "h-67.2" ] ],
+    [ "oled1:VCC", "vcc4:VCC", "red", [ "v0" ] ],
+    [ "oled1:SCL", "esp:D22", "yellow", [ "v0" ] ],
+    [ "oled1:SDA", "esp:D21", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
