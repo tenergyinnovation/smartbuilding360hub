@@ -4,3 +4,11 @@
 .vscode/launch.json
 .vscode/ipch
 .DS_Store
+lib/Adafruit-GFX-Library/
+lib/Adafruit_ADS1X15/
+lib/Adafruit_BusIO/
+lib/Adafruit_Sensor/
+lib/Adafruit_SSD1306/
+lib/arduino-LoRa/
+lib/LiquidCrystal_I2C/
+lib/tenergy32hub/
