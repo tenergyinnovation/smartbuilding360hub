@@ -139,7 +139,7 @@ void loop()
     // แสดงค่า Raw และ threshold ในรูปแบบที่ serial-plotter รองรับ
     // ตัวอย่าง: >raw:123,threshold:1000
     Serial.print(">");
-    Serial.print("raw:");
+    Serial.print("Vib:");
     Serial.print(abs(raw)); // ใช้ abs() เพื่อแสดงค่าเป็นบวก
     Serial.print(",threshold:");
     Serial.println(threshold);
