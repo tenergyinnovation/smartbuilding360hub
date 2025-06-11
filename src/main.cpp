@@ -1,5 +1,5 @@
 /***********************************************************************
- * Project      :     tenergy32hub_template
+ * Project      :     smartbuilding360hub
  * Description  :     Template coding for tenergy32hub on vscode with platformIO
  * Hardware     :     tenergy32hub
  * Author       :     Tenergy Innovation Co., Ltd.
@@ -26,7 +26,7 @@ String version = "0.1";
 void header_print(void)
 {
     Serial.printf("\r\n***********************************************************************\r\n");
-    Serial.printf("* Project      :     tenergy32hub_template\r\n");
+    Serial.printf("* Project      :     smartbuilding360hub\r\n");
     Serial.printf("* Description  :     Template coding for tenergy32hub on vscode with platformIO\r\n");
     Serial.printf("* Hardware     :     tenergy32hub\r\n");
     Serial.printf("* Author       :     Tenergy Innovation Co., Ltd.\r\n");
@@ -80,7 +80,7 @@ String getUnitNameFromMac()
     esp_read_mac(mac, ESP_MAC_WIFI_STA);
     char macStr[7];
     snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]);
-    return "tenergy32hub-" + String(macStr);
+    return "esp32hub-" + String(macStr);
 }
 
 /***********************************************************************
@@ -95,20 +95,20 @@ void setup()
     Serial.begin(115200);
     header_print();
 
-    // Initialize and enable the watchdog with a 10-second timeout.
-    esp_task_wdt_init(WDT_TIMEOUT, true); // true resets the CPU on WDT timeout
-    esp_task_wdt_add(NULL);               // Add current task to watchdog monitoring
-
     mcu.begin();
     mcu.displayOLEDInfo();
     vTaskDelay(1000);
-    
+
     // สร้าง unitName จาก MAC Address
     unitName = getUnitNameFromMac();
 
     // แสดงชื่อ unitName บน Serial และ OLED
     Serial.printf("unitName: %s\r\n", unitName.c_str());
     mcu.displayOLED(unitName.c_str());
+
+    // Initialize and enable the watchdog with a 10-second timeout.
+    esp_task_wdt_init(WDT_TIMEOUT, true); // true resets the CPU on WDT timeout
+    esp_task_wdt_add(NULL);               // Add current task to watchdog monitoring
 }
 
 /***********************************************************************
