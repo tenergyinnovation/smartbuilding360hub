@@ -1,5 +1,5 @@
 /***********************************************************************
- * Project      :     smartbuilding360hub Sound Sensor
+ * Project      :     smartbuilding360hub Sound Sensor (Serial-plotter)
  * Description  :     Template coding for tenergy32hub on vscode with platformIO
  * Hardware     :     tenergy32hub
  * Author       :     Tenergy Innovation Co., Ltd.
@@ -27,13 +27,13 @@ String version = "1.0"; // กำหนดเวอร์ชันของเ�
 void header_print(void)
 {
     Serial.printf("\r\n***********************************************************************\r\n");
-    Serial.printf("* Project      :     smartbuilding360hub Sound Sensor\r\n");
+    Serial.printf("* Project      :     smartbuilding360hub Sound Sensor (Serial-plotter)\r\n");
     Serial.printf("* Description  :     Template coding for tenergy32hub on vscode with platformIO\r\n");
     Serial.printf("* Hardware     :     tenergy32hub\r\n");
     Serial.printf("* Author       :     Tenergy Innovation Co., Ltd.\r\n");
     Serial.printf("* Date         :     04/07/2022\r\n");
     Serial.printf("* Revision     :     %s\r\n", version);
-    Serial.printf("* Rev1.0       :     Origital\r\n");
+    Serial.printf("* Rev1.0       :     Original\r\n");
     Serial.printf("* website      :     http://www.tenergyinnovation.co.th\r\n");
     Serial.printf("* Email        :     uten.boonliam@tenergyinnovation.co.th\r\n");
     Serial.printf("* TEL          :     +66 89-140-7205\r\n");
@@ -55,7 +55,8 @@ Tenergy32Hub mcu; // สร้างอ็อบเจกต์ mcu สำหร
 /**************************************/
 // กำหนดค่า timeout สำหรับ Watchdog Timer เป็น 10 วินาที
 #define WDT_TIMEOUT 10
-const int threshold = 15000; // ค่าตัวอย่าง threshold
+const int offset = 10100; // กำหนดค่า offset
+const int threshold = offset * 0.05; // threshold คือ ±5% ของ offset
 
 /**************************************/
 /*       eeprom address define        */
@@ -134,40 +135,38 @@ void setup()
 void loop()
 {
     // อ่านค่า Microphone Sensor จาก AIN1 จำนวน 10 ครั้ง แล้วหาค่าเฉลี่ย
-    long sum_raw_mic = 0; // ประกาศตัวแปรสำหรับรวมค่าที่อ่านได้
-    for (int i = 0; i < 10; i++)
-    {                                         // วนลูปอ่านค่า 10 ครั้ง
-        sum_raw_mic += mcu.readADCChannel(1); // อ่านค่าดิบจาก AIN1 แล้วบวกสะสม
-        delay(2);                             // หน่วงเวลาสั้น ๆ เพื่อความแม่นยำในการอ่าน
+    long sum_raw_mic = 0;
+    for (int i = 0; i < 10; i++) {
+        sum_raw_mic += mcu.readADCChannel(1);
+        delay(2);
     }
-    int16_t raw_mic = sum_raw_mic / 10;            // หาค่าเฉลี่ยของค่าดิบที่อ่านได้ 10 ครั้ง
-    float voltage_mic = raw_mic * 0.1875 / 1000.0; // แปลงค่าดิบเป็นแรงดันไฟฟ้า (โวลต์)
+    int16_t raw_mic = sum_raw_mic / 10;
+    float voltage_mic = raw_mic * 0.1875 / 1000.0;
 
-    // แสดงค่าดิบและแรงดันไฟฟ้าทาง Serial Monitor
-    Serial.print("Mic Raw(avg): ");
-    Serial.print(raw_mic);
-    Serial.print("  V: ");
-    Serial.println(voltage_mic, 2);
+    // คำนวณขอบเขต threshold
+    int upper = offset + threshold;
+    int lower = offset - threshold;
 
-    char line1[22], line2[22]; // ประกาศตัวแปรสำหรับเก็บข้อความที่จะแสดงบน OLED
+    // แสดงค่าที่อ่านได้บน Serial-plotter
+    Serial.printf(">Sound:%d,Offset:%d,upper:%d,lower:%d\r\n", raw_mic, offset, upper, lower);
+
+    char line1[22], line2[22], line3[22];
 
     // ตรวจสอบว่าเสียงที่วัดได้เกิน threshold หรือไม่
-    if (abs(raw_mic) > threshold)
+    if (raw_mic > upper || raw_mic < lower)
     {
-        Serial.println("*** Sound detected! ***");                // แจ้งเตือนทาง Serial ถ้าเกิน threshold
-        snprintf(line1, sizeof(line1), "Sound! Raw:%d", raw_mic); // เตรียมข้อความแสดงบน OLED
-        snprintf(line2, sizeof(line2), "V:%.2f T:%d", voltage_mic, threshold);
-        mcu.displayOLEDLines(line1, line2); // แสดงข้อความบน OLED
-        mcu.beep(2, 200);                   // ส่งเสียง buzzer 2 ครั้ง
+        snprintf(line1, sizeof(line1), "ALERT! Raw:%d", raw_mic);
+        snprintf(line2, sizeof(line2), "V:%.2f", voltage_mic);
+        snprintf(line3, sizeof(line3), "Out of range!");
+        mcu.displayOLEDLines(line1, line2, line3);
+        mcu.beep(2, 200);
     }
     else
     {
-        snprintf(line1, sizeof(line1), "Mic:%d V:%.2f", raw_mic, voltage_mic); // ข้อความปกติบน OLED
-        snprintf(line2, sizeof(line2), "Threshold: %d", threshold);
-        mcu.displayOLEDLines(line1, line2); // แสดงข้อความบน OLED
+        snprintf(line1, sizeof(line1), "Mic:%d V:%.2f", raw_mic, voltage_mic);
+        snprintf(line2, sizeof(line2), "Range:%d~%d", lower, upper);
+        mcu.displayOLEDLines(line1, line2);
     }
 
-    delay(10); // หน่วงเวลาเล็กน้อยก่อนวนลูปรอบถัดไป
-
-    esp_task_wdt_reset(); // รีเซ็ต Watchdog Timer เพื่อป้องกันบอร์ดรีเซ็ตตัวเอง
+    esp_task_wdt_reset();
 }
