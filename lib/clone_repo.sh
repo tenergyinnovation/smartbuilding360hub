@@ -27,6 +27,7 @@ REPO_URLS=(
     "https://github.com/adafruit/Adafruit_ADS1X15.git"   
     "https://github.com/johnrickman/LiquidCrystal_I2C.git"
     "https://github.com/adafruit/Adafruit-GFX-Library.git"
+    "https://github.com/adafruit/Adafruit_SHT31.git"
 )
 
 for REPO_URL in "${REPO_URLS[@]}"; do

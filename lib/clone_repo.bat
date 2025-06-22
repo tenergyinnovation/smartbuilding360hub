@@ -24,6 +24,7 @@ set REPO_URLS=^
     "https://github.com/adafruit/Adafruit_ADS1X15.git" ^   
     "https://github.com/johnrickman/LiquidCrystal_I2C.git" ^
     "https://github.com/adafruit/Adafruit-GFX-Library.git" ^
+    "https://github.com/adafruit/Adafruit_SHT31.git" ^
 
 REM Create the target directory if it doesn't exist
 if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
