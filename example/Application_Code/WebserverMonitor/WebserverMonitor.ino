@@ -4,9 +4,10 @@
  * Hardware     :     tenergy32hub
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     22/06/2025
- * Revision     :     1.1
+ * Revision     :     1.2
  * Rev1.0       :     Original
  * Rev1.1       :     Update for new features [2025-06-22]
+ * Rev1.2       :     Add EEPROM save/load for temp threshold [2025-06-23]   
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     +66 89-140-7205
@@ -23,7 +24,7 @@
 /**************************************/
 /*          Firmware Version          */
 /**************************************/
-String version = "1.1"; // กำหนดเวอร์ชันของเฟิร์มแวร์
+String version = "1.2"; // กำหนดเวอร์ชันของเฟิร์มแวร์
 
 /**************************************/
 /*          Header project            */
@@ -128,18 +129,29 @@ void handleRoot()
     html += "<meta http-equiv='refresh' content='5'>"; // อัปเดตหน้าเว็บทุก 5 วินาที
     html += "<title>Sensor Data</title></head><body>"; // กำหนด title
     html += "<h2>Smart Building 360 Sensor</h2>"; // หัวข้อ
-    html += "<p>Temperature: <b>" + String(temp, 2) + " &deg;C</b></p>"; // แสดงค่า temp
-    html += "<p>Humidity: <b>" + String(humid, 2) + " %</b></p>"; // แสดงค่า humid
+
+    // Temperature: สีแดง
+    html += "<p><span style='color:red;'>Temperature:</span> <b style='color:red;'>" + String(temp, 2) + " &deg;C</b></p>";
+
+    // Humidity: สีน้ำเงิน
+    html += "<p><span style='color:blue;'>Humidity:</span> <b style='color:blue;'>" + String(humid, 2) + " %</b></p>";
+
+    // Threshold: สีดำ
+    html += "<p><span style='color:black;'>Threshold:</span> <b style='color:black;'>" + String(tempThreshold, 1) + " &deg;C</b></p>";
+
+    // Relay Status: สีดำ, สถานะ ON เป็นสีเขียว, OFF เป็นเทา
+    html += "<p><span style='color:black;'>Relay Status:</span> <b style='color:" 
+        + String(relayState ? "green" : "gray") + ";'>" 
+        + (relayState ? "ON" : "OFF") + "</b></p>";
+
     html += "<form action='/relay' method='POST'>"; // ฟอร์มสำหรับควบคุม relay
-    if (relayState) // ถ้า relay เปิด
+    if (relayState)
     {
-        html += "<p>Relay Status: <b>ON</b></p>"; // แสดงสถานะ ON
-        html += "<button type='submit' name='relay' value='off'>Turn OFF Relay</button>"; // ปุ่มปิด
+        html += "<button type='submit' name='relay' value='off'>Turn OFF Relay</button>";
     }
-    else // ถ้า relay ปิด
+    else
     {
-        html += "<p>Relay Status: <b>OFF</b></p>"; // แสดงสถานะ OFF
-        html += "<button type='submit' name='relay' value='on'>Turn ON Relay</button>"; // ปุ่มเปิด
+        html += "<button type='submit' name='relay' value='on'>Turn ON Relay</button>";
     }
     html += "</form>"; // จบฟอร์ม
     html += "</body></html>"; // จบ HTML
