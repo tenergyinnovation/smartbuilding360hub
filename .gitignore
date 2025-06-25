@@ -12,3 +12,4 @@ lib/Adafruit_SSD1306/
 lib/arduino-LoRa/
 lib/LiquidCrystal_I2C/
 lib/tenergy32hub/
+lib/Adafruit_SHT31/
