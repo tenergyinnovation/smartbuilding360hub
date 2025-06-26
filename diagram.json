@@ -94,7 +94,30 @@
       "attrs": {}
     },
     { "type": "wokwi-vcc", "id": "vcc6", "top": -239.24, "left": -153.6, "attrs": {} },
-    { "type": "wokwi-gnd", "id": "gnd6", "top": -182.4, "left": -29.4, "attrs": {} }
+    { "type": "wokwi-gnd", "id": "gnd6", "top": -182.4, "left": -29.4, "attrs": {} },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir2",
+      "top": 157.6,
+      "left": -276.18,
+      "attrs": {}
+    },
+    { "type": "wokwi-vcc", "id": "vcc7", "top": 211.96, "left": -307.2, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd9", "top": 268.8, "left": -192.6, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -326.4,
+      "left": -134.4,
+      "attrs": { "text": "Motion Sensor" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": 124.8,
+      "left": -307.2,
+      "attrs": { "text": "Water Leak Sensor" }
+    }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
@@ -131,7 +154,10 @@
     [ "oled1:SDA", "esp:D21", "green", [ "v0" ] ],
     [ "pir1:OUT", "esp:D32", "green", [ "v0" ] ],
     [ "pir1:VCC", "vcc6:VCC", "red", [ "v9.6", "h-28.8" ] ],
-    [ "gnd6:GND", "pir1:GND", "black", [ "v-9.6", "h-47.74" ] ]
+    [ "gnd6:GND", "pir1:GND", "black", [ "v-9.6", "h-47.74" ] ],
+    [ "pir2:VCC", "vcc7:VCC", "red", [ "v19.2", "h-38.4" ] ],
+    [ "pir2:GND", "gnd9:GND", "black", [ "v9.6", "h38.14", "v19.2" ] ],
+    [ "esp:D33", "pir2:OUT", "green", [ "h-134.4", "v326.4", "h-38.4" ] ]
   ],
   "dependencies": {}
 }
