@@ -85,7 +85,16 @@
       "top": -6.46,
       "left": 297.83,
       "attrs": { "i2cAddress": "0x3c" }
-    }
+    },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir1",
+      "top": -293.6,
+      "left": -122.58,
+      "attrs": {}
+    },
+    { "type": "wokwi-vcc", "id": "vcc6", "top": -239.24, "left": -153.6, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd6", "top": -182.4, "left": -29.4, "attrs": {} }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
@@ -119,7 +128,10 @@
     [ "oled1:GND", "gnd5:GND", "black", [ "v-19.2", "h-67.2" ] ],
     [ "oled1:VCC", "vcc4:VCC", "red", [ "v0" ] ],
     [ "oled1:SCL", "esp:D22", "yellow", [ "v0" ] ],
-    [ "oled1:SDA", "esp:D21", "green", [ "v0" ] ]
+    [ "oled1:SDA", "esp:D21", "green", [ "v0" ] ],
+    [ "pir1:OUT", "esp:D32", "green", [ "v0" ] ],
+    [ "pir1:VCC", "vcc6:VCC", "red", [ "v9.6", "h-28.8" ] ],
+    [ "gnd6:GND", "pir1:GND", "black", [ "v-9.6", "h-47.74" ] ]
   ],
   "dependencies": {}
 }
