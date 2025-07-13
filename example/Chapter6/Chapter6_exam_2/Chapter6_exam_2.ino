@@ -58,21 +58,12 @@ Tenergy32Hub mcu; // สร้างอ็อบเจกต์ mcu สำหร
 /**************************************/
 /*        define global variable      */
 /**************************************/
-String unitName = "";
 unsigned long lastMotionTime = 0; // เวลาที่ตรวจจับการเคลื่อนไหวล่าสุด
 bool relayState = false;          // สถานะรีเลย์
 
 /**************************************/
 /*           define function          */
 /**************************************/
-String getUnitNameFromMac()
-{
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA);
-    char macStr[7];
-    snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]);
-    return "esp32hub-" + String(macStr);
-}
 
 /***********************************************************************
  * FUNCTION:    setup
@@ -82,20 +73,16 @@ String getUnitNameFromMac()
  ***********************************************************************/
 void setup()
 {
-    Serial.begin(115200);           // เริ่มต้น Serial Monitor ที่ baudrate 115200
-    header_print();                 // แสดงข้อมูลโปรเจกต์
+    Serial.begin(115200); // เริ่มต้น Serial Monitor ที่ baudrate 115200
+    header_print();       // แสดงข้อมูลโปรเจกต์
 
-    mcu.begin();                    // เริ่มต้นใช้งานบอร์ด tenergy32hub
-    mcu.displayOLEDInfo();          // แสดงข้อมูลบน OLED
-    vTaskDelay(1000);               // หน่วงเวลา 1 วินาที
+    mcu.begin();           // เริ่มต้นใช้งานบอร์ด tenergy32hub
+    mcu.displayOLEDInfo(); // แสดงข้อมูลบน OLED
+    vTaskDelay(1000);      // หน่วงเวลา 1 วินาที
 
-    unitName = getUnitNameFromMac();// สร้างชื่อ unitName จาก MAC Address
-    Serial.printf("unitName: %s\r\n", unitName.c_str());
-    mcu.displayOLED(unitName.c_str());
+    pinMode(PIR_PIN, INPUT); // กำหนดขา PIR เป็นอินพุต
 
-    pinMode(PIR_PIN, INPUT);        // กำหนดขา PIR เป็นอินพุต
-
-    mcu.relayOff();                 // ปิดรีเลย์เริ่มต้น
+    mcu.relayOff(); // ปิดรีเลย์เริ่มต้น
     relayState = false;
 
     esp_task_wdt_init(WDT_TIMEOUT, true); // ตั้งค่า Watchdog Timer
@@ -119,11 +106,12 @@ void loop()
 
     if (pirState == HIGH) // มีการตรวจจับการเคลื่อนไหว
     {
-        Serial.println("Motion Detected!"); // แสดงข้อความทาง Serial
+        Serial.println("Motion Detected!");             // แสดงข้อความทาง Serial
         snprintf(line1, sizeof(line1), "PIR: Motion!"); // แสดงข้อความบน OLED
-        lastMotionTime = millis(); // บันทึกเวลาที่ตรวจจับการเคลื่อนไหว
+        lastMotionTime = millis();                      // บันทึกเวลาที่ตรวจจับการเคลื่อนไหว
 
-        if (!relayState) {
+        if (!relayState)
+        {
             mcu.relayOn(); // เปิดรีเลย์
             relayState = true;
             Serial.println("Relay ON");
@@ -133,16 +121,20 @@ void loop()
     }
     else // ไม่มีการเคลื่อนไหว
     {
-        if (relayState) {
+        if (relayState)
+        {
             // คำนวณเวลาที่เหลือสำหรับ countdown (30 วินาที)
             unsigned long elapsed = millis() - lastMotionTime;
-            if (elapsed < RELAY_ON_TIME) {
+            if (elapsed < RELAY_ON_TIME)
+            {
                 int countdown = (RELAY_ON_TIME - elapsed) / 1000; // แปลงเป็นวินาที
                 snprintf(line1, sizeof(line1), "PIR: No Motion");
                 snprintf(line2, sizeof(line2), "OFF in: %2ds", countdown); // แสดง countdown บน OLED
                 mcu.displayOLEDLines(line1, line2);
                 Serial.printf("No Motion, Relay will OFF in %d s\r\n", countdown); // แสดง countdown ทาง Serial
-            } else {
+            }
+            else
+            {
                 mcu.relayOff(); // ปิดรีเลย์เมื่อครบ 30 วินาที
                 relayState = false;
                 Serial.println("No Motion > 30s, Relay OFF");
@@ -150,7 +142,9 @@ void loop()
                 snprintf(line2, sizeof(line2), "Relay: OFF");
                 mcu.displayOLEDLines(line1, line2);
             }
-        } else {
+        }
+        else
+        {
             snprintf(line1, sizeof(line1), "PIR: No Motion");
             snprintf(line2, sizeof(line2), "Relay: OFF");
             mcu.displayOLEDLines(line1, line2);
@@ -158,5 +152,5 @@ void loop()
     }
 
     esp_task_wdt_reset(); // รีเซ็ต Watchdog Timer
-    delay(200); // หน่วงเวลาเล็กน้อยเพื่อความเสถียร
+    delay(200);           // หน่วงเวลาเล็กน้อยเพื่อความเสถียร
 }

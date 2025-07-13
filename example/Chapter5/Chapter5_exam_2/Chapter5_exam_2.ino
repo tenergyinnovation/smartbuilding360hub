@@ -55,7 +55,7 @@ Tenergy32Hub mcu; // สร้างอ็อบเจกต์ mcu สำหร
 /**************************************/
 // กำหนดค่า timeout สำหรับ Watchdog Timer เป็น 10 วินาที
 #define WDT_TIMEOUT 10
-const int offset = 10100; // กำหนดค่า offset
+const int offset = 10100;            // กำหนดค่า offset
 const int threshold = offset * 0.05; // threshold คือ ±5% ของ offset
 
 /**************************************/
@@ -66,27 +66,10 @@ const int threshold = offset * 0.05; // threshold คือ ±5% ของ offse
 /**************************************/
 /*        define global variable      */
 /**************************************/
-// ตัวแปรสำหรับเก็บชื่อ unitName ที่สร้างจาก MAC Address
-String unitName = "";
 
 /**************************************/
 /*           define function          */
 /**************************************/
-
-/***********************************************************************
- * FUNCTION:    getUnitNameFromMac
- * DESCRIPTION: สร้างชื่อ unitName จาก MAC Address (6 ตัวหลัง)
- * RETURNED:    String ชื่อบอร์ด tenergy32hub-xxxxxx
- ***********************************************************************/
-// ฟังก์ชันนี้จะอ่าน MAC Address ของบอร์ด แล้วนำ 3 ไบต์สุดท้ายมาใช้สร้างชื่อ unitName
-String getUnitNameFromMac()
-{
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA); // อ่าน MAC Address ของ WiFi
-    char macStr[7];
-    snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]); // แปลง 3 ไบต์สุดท้ายเป็นสตริง
-    return "esp32hub-" + String(macStr);                                      // รวมเป็นชื่อ unitName
-}
 
 /***********************************************************************
  * FUNCTION:    setup
@@ -103,12 +86,6 @@ void setup()
     mcu.begin();           // เริ่มต้นการทำงานของอ็อบเจกต์ mcu
     mcu.displayOLEDInfo(); // แสดงข้อมูลบนหน้าจอ OLED
     vTaskDelay(1000);      // หน่วงเวลา 1 วินาที
-
-    unitName = getUnitNameFromMac(); // สร้างชื่อ unitName จาก MAC Address
-
-    // แสดงชื่อ unitName บน Serial และ OLED
-    Serial.printf("unitName: %s\r\n", unitName.c_str());
-    mcu.displayOLED(unitName.c_str());
 
     if (mcu.initADC()) //    ตรวจสอบการเริ่มต้น ADC
     {
@@ -136,7 +113,8 @@ void loop()
 {
     // อ่านค่า Microphone Sensor จาก AIN1 จำนวน 10 ครั้ง แล้วหาค่าเฉลี่ย
     long sum_raw_mic = 0;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         sum_raw_mic += mcu.readADCChannel(1);
         delay(2);
     }

@@ -47,19 +47,11 @@ BH1750 bh1750(LOW); // กำหนด I2C address (0x23 หรือ 0x5C)
 /**************************************/
 /*        define global variable      */
 /**************************************/
-String unitName = "";
 
 /**************************************/
 /*           define function          */
 /**************************************/
-String getUnitNameFromMac()
-{
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA);
-    char macStr[7];
-    snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]);
-    return "esp32hub-" + String(macStr);
-}
+
 
 /***********************************************************************
  * FUNCTION:    setup
@@ -73,8 +65,7 @@ void setup()
     mcu.displayOLEDInfo();
     vTaskDelay(1000);
 
-    unitName = getUnitNameFromMac();
-    Serial.printf("unitName: %s\r\n", unitName.c_str());
+  
 
     Wire.begin();
 

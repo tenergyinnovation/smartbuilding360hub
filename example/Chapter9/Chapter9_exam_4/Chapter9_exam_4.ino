@@ -24,7 +24,6 @@ String version = "1.3";
 /**************************************/
 /*        define global variable      */
 /**************************************/
-String unitName = "";
 
 /**************************************/
 /*        define object variable      */
@@ -67,19 +66,6 @@ void header_print(void)
 }
 
 /***********************************************************************
- * FUNCTION:    getUnitNameFromMac
- * DESCRIPTION: สร้างชื่อ unitName จาก MAC Address ของ ESP32
- ***********************************************************************/
-String getUnitNameFromMac()
-{
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA);
-    char macStr[7];
-    snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]);
-    return "esp32hub-" + String(macStr);
-}
-
-/***********************************************************************
  * FUNCTION:    saveTempAlertToEEPROM
  * DESCRIPTION: บันทึกค่า TEMP_ALERT ลงใน EEPROM
  ***********************************************************************/
@@ -115,9 +101,6 @@ void setup()
     mcu.begin();
     mcu.displayOLEDInfo();
     vTaskDelay(1000);
-
-    unitName = getUnitNameFromMac();
-    Serial.printf("unitName: %s\r\n", unitName.c_str());
 
     Wire.begin();
 

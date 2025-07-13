@@ -64,27 +64,10 @@ Tenergy32Hub mcu; // สร้างอ็อบเจกต์ mcu สำหร
 /**************************************/
 /*        define global variable      */
 /**************************************/
-// ตัวแปรสำหรับเก็บชื่อ unitName ที่สร้างจาก MAC Address
-String unitName = "";
 
 /**************************************/
 /*           define function          */
 /**************************************/
-
-/***********************************************************************
- * FUNCTION:    getUnitNameFromMac
- * DESCRIPTION: สร้างชื่อ unitName จาก MAC Address (6 ตัวหลัง)
- * RETURNED:    String ชื่อบอร์ด tenergy32hub-xxxxxx
- ***********************************************************************/
-// ฟังก์ชันนี้จะอ่าน MAC Address ของบอร์ด แล้วนำ 3 ไบต์สุดท้ายมาใช้สร้างชื่อ unitName
-String getUnitNameFromMac()
-{
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA); // อ่าน MAC Address ของ WiFi
-    char macStr[7];
-    snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]); // แปลง 3 ไบต์สุดท้ายเป็นสตริง
-    return "esp32hub-" + String(macStr);                                      // รวมเป็นชื่อ unitName
-}
 
 /***********************************************************************
  * FUNCTION:    setup
@@ -101,12 +84,6 @@ void setup()
     mcu.begin();           // เริ่มต้นการทำงานของอ็อบเจกต์ mcu
     mcu.displayOLEDInfo(); // แสดงข้อมูลบนหน้าจอ OLED
     vTaskDelay(1000);      // หน่วงเวลา 1 วินาที
-
-    unitName = getUnitNameFromMac(); // สร้างชื่อ unitName จาก MAC Address
-
-    // แสดงชื่อ unitName บน Serial และ OLED
-    Serial.printf("unitName: %s\r\n", unitName.c_str());
-    mcu.displayOLED(unitName.c_str());
 
     // ตั้งค่าและเปิดใช้งาน Watchdog Timer (WDT) ที่ 10 วินาที
     esp_task_wdt_init(WDT_TIMEOUT, true); // true = รีเซ็ต CPU เมื่อ WDT timeout

@@ -58,21 +58,12 @@ Tenergy32Hub mcu; // สร้างอ็อบเจกต์ mcu สำหร
 /**************************************/
 /*        define global variable      */
 /**************************************/
-String unitName = "";
 unsigned long lastLeakTime = 0; // เวลาที่ตรวจจับน้ำรั่วล่าสุด
-bool relayState = false;         // สถานะรีเลย์
+bool relayState = false;        // สถานะรีเลย์
 
 /**************************************/
 /*           define function          */
 /**************************************/
-String getUnitNameFromMac()
-{
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA);
-    char macStr[7];
-    snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]);
-    return "esp32hub-" + String(macStr);
-}
 
 /***********************************************************************
  * FUNCTION:    setup
@@ -82,20 +73,16 @@ String getUnitNameFromMac()
  ***********************************************************************/
 void setup()
 {
-    Serial.begin(115200);           // เริ่มต้น Serial Monitor ที่ baudrate 115200
-    header_print();                 // แสดงข้อมูลโปรเจกต์
+    Serial.begin(115200); // เริ่มต้น Serial Monitor ที่ baudrate 115200
+    header_print();       // แสดงข้อมูลโปรเจกต์
 
-    mcu.begin();                    // เริ่มต้นใช้งานบอร์ด tenergy32hub
-    mcu.displayOLEDInfo();          // แสดงข้อมูลบน OLED
-    vTaskDelay(1000);               // หน่วงเวลา 1 วินาที
-
-    unitName = getUnitNameFromMac();// สร้างชื่อ unitName จาก MAC Address
-    Serial.printf("unitName: %s\r\n", unitName.c_str());
-    mcu.displayOLED(unitName.c_str());
+    mcu.begin();           // เริ่มต้นใช้งานบอร์ด tenergy32hub
+    mcu.displayOLEDInfo(); // แสดงข้อมูลบน OLED
+    vTaskDelay(1000);      // หน่วงเวลา 1 วินาที
 
     pinMode(WATER_LEAK_PIN, INPUT); // กำหนดขา Water Leak Sensor เป็นอินพุต
 
-    mcu.relayOff();                 // ปิดรีเลย์เริ่มต้น
+    mcu.relayOff(); // ปิดรีเลย์เริ่มต้น
     relayState = false;
 
     esp_task_wdt_init(WDT_TIMEOUT, true); // ตั้งค่า Watchdog Timer
@@ -125,5 +112,5 @@ void loop()
     }
 
     esp_task_wdt_reset(); // รีเซ็ต Watchdog Timer
-    delay(200); // หน่วงเวลาเล็กน้อยเพื่อความเสถียร
+    delay(200);           // หน่วงเวลาเล็กน้อยเพื่อความเสถียร
 }

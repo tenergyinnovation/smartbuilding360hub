@@ -21,7 +21,7 @@ String version = "1.0";
 /**************************************/
 /*        define global variable      */
 /**************************************/
-String unitName = "";
+
 
 /**************************************/
 /*          Header project            */
@@ -38,18 +38,6 @@ void header_print(void)
     Serial.printf("***********************************************************************/\r\n");
 }
 
-/***********************************************************************
- * FUNCTION:    getUnitNameFromMac
- * DESCRIPTION: สร้างชื่อ unitName จาก MAC Address ของ ESP32
- ***********************************************************************/
-String getUnitNameFromMac()
-{
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA);
-    char macStr[7];
-    snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]);
-    return "esp32hub-" + String(macStr);
-}
 
 /**************************************/
 /*        define object variable      */
@@ -74,9 +62,6 @@ void setup()
     mcu.begin();           // เริ่มต้นบอร์ด tenergy32hub
     mcu.displayOLEDInfo(); // แสดงข้อมูลบน OLED
     vTaskDelay(1000);      // หน่วงเวลา 1 วินาที
-
-    unitName = getUnitNameFromMac(); // สร้างชื่อ unitName จาก MAC Address
-    Serial.printf("unitName: %s\r\n", unitName.c_str());
 
     Wire.begin(); // เริ่มต้น I2C
 

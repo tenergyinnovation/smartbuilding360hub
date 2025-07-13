@@ -13,3 +13,4 @@ lib/arduino-LoRa/
 lib/LiquidCrystal_I2C/
 lib/tenergy32hub/
 lib/Adafruit_SHT31/
+lib/ErriezBH1750/
