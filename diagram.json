@@ -87,36 +87,61 @@
       "attrs": { "i2cAddress": "0x3c" }
     },
     {
-      "type": "wokwi-pir-motion-sensor",
-      "id": "pir1",
-      "top": -293.6,
-      "left": -122.58,
-      "attrs": {}
-    },
-    { "type": "wokwi-vcc", "id": "vcc6", "top": -239.24, "left": -153.6, "attrs": {} },
-    { "type": "wokwi-gnd", "id": "gnd6", "top": -182.4, "left": -29.4, "attrs": {} },
-    {
-      "type": "wokwi-pir-motion-sensor",
-      "id": "pir2",
-      "top": 157.6,
-      "left": -276.18,
-      "attrs": {}
-    },
-    { "type": "wokwi-vcc", "id": "vcc7", "top": 211.96, "left": -307.2, "attrs": {} },
-    { "type": "wokwi-gnd", "id": "gnd9", "top": 268.8, "left": -192.6, "attrs": {} },
-    {
-      "type": "wokwi-text",
-      "id": "text1",
-      "top": -326.4,
-      "left": -134.4,
-      "attrs": { "text": "Motion Sensor" }
-    },
-    {
       "type": "wokwi-text",
       "id": "text2",
-      "top": 124.8,
-      "left": -307.2,
-      "attrs": { "text": "Water Leak Sensor" }
+      "top": -67.2,
+      "left": -288,
+      "attrs": { "text": "SW1" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": -67.2,
+      "left": -211.2,
+      "attrs": { "text": "SW2" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": -67.2,
+      "left": -345.6,
+      "attrs": { "text": "SW3" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": -9.6,
+      "left": -124.8,
+      "attrs": { "text": "Buzzer" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text6",
+      "top": -96,
+      "left": 172.8,
+      "attrs": { "text": "Relay" }
+    },
+    { "type": "wokwi-text", "id": "text1", "top": 86.4, "left": 336, "attrs": { "text": "OLED" } },
+    {
+      "type": "wokwi-text",
+      "id": "text7",
+      "top": -9.6,
+      "left": 105.6,
+      "attrs": { "text": "RedLED" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text8",
+      "top": 48,
+      "left": 105.6,
+      "attrs": { "text": "BlueLED" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text9",
+      "top": -249.6,
+      "left": -57.6,
+      "attrs": { "text": "Tenergy32hub IoT Board" }
     }
   ],
   "connections": [
@@ -137,7 +162,7 @@
     [ "r1:1", "vcc1:VCC", "red", [ "h0" ] ],
     [ "r2:1", "vcc5:VCC", "red", [ "h0" ] ],
     [ "sw1:3", "gnd7:GND", "black", [ "v0" ] ],
-    [ "r4:1", "sw1:1", "red", [ "v9.6", "h-57.6", "v57.6", "h28.8" ] ],
+    [ "r4:1", "sw1:1", "red", [ "h-57.6", "v67.2" ] ],
     [
       "esp:VP",
       "sw1:2",
@@ -151,13 +176,7 @@
     [ "oled1:GND", "gnd5:GND", "black", [ "v-19.2", "h-67.2" ] ],
     [ "oled1:VCC", "vcc4:VCC", "red", [ "v0" ] ],
     [ "oled1:SCL", "esp:D22", "yellow", [ "v0" ] ],
-    [ "oled1:SDA", "esp:D21", "green", [ "v0" ] ],
-    [ "pir1:OUT", "esp:D32", "green", [ "v0" ] ],
-    [ "pir1:VCC", "vcc6:VCC", "red", [ "v9.6", "h-28.8" ] ],
-    [ "gnd6:GND", "pir1:GND", "black", [ "v-9.6", "h-47.74" ] ],
-    [ "pir2:VCC", "vcc7:VCC", "red", [ "v19.2", "h-38.4" ] ],
-    [ "pir2:GND", "gnd9:GND", "black", [ "v9.6", "h38.14", "v19.2" ] ],
-    [ "esp:D33", "pir2:OUT", "green", [ "h-134.4", "v326.4", "h-38.4" ] ]
+    [ "oled1:SDA", "esp:D21", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }
