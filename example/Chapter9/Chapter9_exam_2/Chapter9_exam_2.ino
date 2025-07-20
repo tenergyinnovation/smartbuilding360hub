@@ -1,10 +1,12 @@
 /***********************************************************************
- * Project      :     smartbuilding360hub SHT30 Temp & Humidity Sensor
+ * Project      :     smartbuilding360hub SHT30 Temp & Humidity Sensor + Buzzer Alert
  * Description  :     อ่านค่าอุณหภูมิและความชื้นจาก SHT30 และแสดงผลทาง Serial & OLED
- * Hardware     :     tenergy32hub + SHT30
+ *                   แจ้งเตือนด้วยเสียง Buzzer (ฟังก์ชัน beep) เมื่ออุณหภูมิสูงกว่าค่าที่กำหนด
+ *                   แสดงผลบน Serial Monitor และ OLED
+ * Hardware     :     tenergy32hub + SHT30 + Buzzer
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     26/06/2025
- * Revision     :     1.1
+ * Revision     :     1.2
  ***********************************************************************/
 #include <Arduino.h>
 #include <tenergy32hub.h>
@@ -23,14 +25,20 @@ String version = "1.1";
 /**************************************/
 
 /**************************************/
+/*        define setting value        */
+/**************************************/
+float TEMP_ALERT = 30.0; // ค่าอุณหภูมิแจ้งเตือนเริ่มต้น (°C)
+
+/**************************************/
 /*          Header project            */
 /**************************************/
 void header_print(void)
 {
     Serial.printf("\r\n***********************************************************************\r\n");
-    Serial.printf("* Project      :     smartbuilding360hub SHT30 Temp & Humidity Sensor\r\n");
+    Serial.printf("* Project      :     smartbuilding360hub SHT30 Temp & Humidity Sensor + Buzzer Alert\r\n");
     Serial.printf("* Description  :     Read temperature & humidity from SHT30, show on Serial & OLED\r\n");
-    Serial.printf("* Hardware     :     tenergy32hub + SHT30\r\n");
+    Serial.printf("*                :     Alert with beep if temperature > %.1f C\r\n", TEMP_ALERT);
+    Serial.printf("* Hardware     :     tenergy32hub + SHT30 + Buzzer\r\n");
     Serial.printf("* Author       :     Tenergy Innovation Co., Ltd.\r\n");
     Serial.printf("* Date         :     26/06/2025\r\n");
     Serial.printf("* Revision     :     %s\r\n", version.c_str());
@@ -91,6 +99,19 @@ void loop()
     // ตรวจสอบว่าค่าอ่านได้ถูกต้องหรือไม่
     if (!isnan(temperature) && !isnan(humidity))
     {
+
+        // ตรวจสอบอุณหภูมิ ถ้าสูงกว่าค่าที่กำหนดให้แจ้งเตือนด้วย beep
+        if (temperature > TEMP_ALERT)
+        {
+            mcu.beep(3, 300); // ส่งเสียง beep 3 ครั้ง ครั้งละ 300 ms
+            Serial.print("ALERT! ");
+            snprintf(line1, sizeof(line1), "ALERT! Temp: %.1f C", temperature);
+        }
+        else
+        {
+            snprintf(line1, sizeof(line1), "Temp: %.1f C", temperature);
+        }
+
         // แสดงผลทาง Serial Monitor
         Serial.print("Temp: ");
         Serial.print(temperature, 1);
