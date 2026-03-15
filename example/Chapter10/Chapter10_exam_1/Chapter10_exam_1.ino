@@ -13,7 +13,6 @@
 #include <tenergy32hub.h> // ไลบรารีสำหรับควบคุมบอร์ด Tenergy32Hub และ SDM120
 #include <esp_task_wdt.h> // ไลบรารีสำหรับ watchdog timer
 #include <esp_system.h>   // ไลบรารีสำหรับฟังก์ชันระบบ ESP32
-#include <tiny32_v3.h>    // ไลบรารีสำหรับบอร์ด tiny32_v3 (ถ้ามี)
 
 /**************************************/
 /*          Firmware Version          */
